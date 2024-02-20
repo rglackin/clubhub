@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-
-
-from . forms import CreateUserForm, LoginForm
+from django.views import generic
+from django.urls import reverse, reverse_lazy
+from . forms import *
 from django.contrib.auth.decorators import login_required
 
 # Authentication models and functions
@@ -12,15 +12,31 @@ from django.contrib.auth import authenticate, login, logout
 
 
 
-def homepage(request):
+class HomePageView(generic.TemplateView):
+    template_name = "crm/home.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        return context
 
-    return render(request, 'crm/index.html')
 
 
+class RegisterFormView(generic.FormView):
+    template_name = "crm/register.html"
+    form_class= RegisterForm
+    
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        return context
+    
+    def form_valid(self, form):
+        object =form.save()
+        self.success_url =  reverse('crm:index')
+        return super(RegisterFormView, self).form_valid(form)
 
-
-def register(request):
+"""def register(request):
 
     form = CreateUserForm()
 
@@ -38,9 +54,9 @@ def register(request):
 
     context = {'registerform':form}
 
-    return render(request, 'crm/registor.html', context=context )
+    return render(request, 'crm/register.html', context=context )
 
-
+"""
 
 
 
