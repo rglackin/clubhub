@@ -22,7 +22,7 @@ class User(models.Model):
     user_created = models.DateTimeField(auto_now_add=True)  
     user_updated = models.DateTimeField(auto_now_add=True) 
     class Meta:
-        #managed = False
+        managed = False
         db_table = 'user'
 
 class Club(models.Model):
@@ -35,7 +35,7 @@ class Club(models.Model):
     club_updated = models.DateTimeField() 
 
     class Meta:
-        #managed = False
+        managed = False
         db_table = 'club'
 
 class Events(models.Model):
@@ -50,7 +50,7 @@ class Events(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     
     class Meta:
-        #managed = False
+        managed = False
         db_table = 'events'
 
 """class ClubEvents(models.Model):
@@ -66,13 +66,13 @@ class Events(models.Model):
 
 class ClubUser(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE, default=0)
-    user = models.ForeignKey(User, models.DO_NOTHING,default=0)  # Field name made lowercase.
+    user = models.ForeignKey(User, models.DO_NOTHING,default=0) 
     is_coord = models.BooleanField(default = False)
     created = models.DateTimeField()  
     updated = models.DateTimeField() 
 
     class Meta:
-        #managed = False
+        managed = False
         db_table = 'club_user'
 
 
