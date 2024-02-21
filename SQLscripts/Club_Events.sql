@@ -1,7 +1,7 @@
 CREATE TABLE club_events (
 club_id INTEGER,
-event_name INTEGER,
-created TIME,
-updated TIME,
+event_id INTEGER,
+created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 FOREIGN KEY (club_id) REFERENCES club(club_id),
-FOREIGN KEY (event_name) REFERENCES events(event_name))
+FOREIGN KEY (event_id) REFERENCES events(event_id))

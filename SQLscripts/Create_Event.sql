@@ -1,0 +1,10 @@
+CREATE TABLE events(
+event_id INTEGER PRIMARY KEY,
+event_name VARCHAR(20),
+description VARCHAR(100),
+date DATE,
+time TIME,
+venue VARCHAR(30),
+event_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+event_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
