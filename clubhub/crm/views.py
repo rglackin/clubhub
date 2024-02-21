@@ -9,10 +9,8 @@ from . forms import *
 #from .models import User
 from django.contrib.auth.models import auth
 
-
+#this is the user that is logged in
 session_user = None
-
-
 class HomePageView(generic.TemplateView):
     template_name = "crm/home.html"
     def get_context_data(self, **kwargs):
@@ -77,7 +75,7 @@ class LoginView(generic.FormView):
             self.success_url = reverse('crm:index')
         return super().form_valid(form)
 
-class LogoutView(generic.TemplateView):
+class LogoutView():
     template_name = 'crm/logout.html'
     
 """def my_login(request):
