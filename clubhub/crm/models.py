@@ -21,6 +21,8 @@ class User(models.Model):
     is_admin = models.BooleanField(null=False, default = False)
     user_created = models.DateTimeField(auto_now_add=True)  
     user_updated = models.DateTimeField(auto_now_add=True) 
+    
+    
     class Meta:
         managed = False
         db_table = 'user'
