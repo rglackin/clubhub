@@ -12,8 +12,14 @@ pyvenv.cfg
 .venv
 pip-selfcheck.json
 
+clubhub/db.sqlite3
+**/__pycache__
+
 # End of https://mrkandreev.name/snippets/gitignore-generator/#venv
 __pycache__/
+clubhub\clubhub\__pycache__/*
+clubhub\crm\__pycache__/*
+__pycache__/*
 *.py[cod]
 
 # C extensions
