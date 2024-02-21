@@ -21,7 +21,7 @@ clubhub\clubhub\__pycache__/*
 clubhub\crm\__pycache__/*
 __pycache__/*
 *.py[cod]
-
+.vscode/*
 # C extensions
 *.so
 

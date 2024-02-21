@@ -28,7 +28,7 @@ class RegisterForm(forms.ModelForm):
 
 # Authenticate a user
         
-class LoginForm(AuthenticationForm):
+class LoginForm(forms.Form):
 
     username = forms.CharField(widget=TextInput())     
     password = forms.CharField(widget=PasswordInput())      

@@ -1,18 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-""" deprecated
-class User(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)         
-    username = models.CharField(max_length=20)
-    password = models.CharField(max_length=20)
-    phone_no = models.CharField('Phone Number',max_length=10)
-    email = models.CharField(max_length = 100)
-    #TODO: change db_column to is_admin when merging with tables branch
-    is_admin = models.BooleanField(default = False, db_column = 'admin')
 
-    class Meta:
-        managed = False
-        db_table = 'user'"""
 class User(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True) 
     username = models.CharField(max_length=20)
@@ -22,15 +10,9 @@ class User(models.Model):
     is_admin = models.BooleanField(null=False, default = False)
     user_created = models.DateTimeField(auto_now_add=True)  
     user_updated = models.DateTimeField(auto_now_add=True) 
-
     class Meta:
         managed = False
         db_table = 'user'
-
-
-
-
-
 
     def clean_username(self):
         if len(self.username) > 20:
@@ -91,7 +73,7 @@ class Events(models.Model):
 
 class ClubUser(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE, default=0)
-    user = models.ForeignKey(User, models.DO_NOTHING,default=0) 
+    user = models.ForeignKey(User, on_delete=models.CASCADE,default=0) 
     is_coord = models.BooleanField(default = False)
     created = models.DateTimeField()  
     updated = models.DateTimeField() 
