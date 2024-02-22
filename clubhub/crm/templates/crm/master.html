@@ -25,7 +25,7 @@
 </head> 
 
 <body class="bg-light">
-  
+  {% if show_sidebar %}
   <div class="d-flex flex-column shadow sidebar " id="sidebar" aria-expanded="false" data-toggle="collapse">
     <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
       <li class="nav-item">
@@ -48,6 +48,7 @@
       </li>
     </ul>
   </div>
+  {%endif%}
   
   {%block main%}
   {%endblock%}
