@@ -18,10 +18,10 @@ urlpatterns = [
 
     path('approval-pending', views.PendingRegisterView.as_view(),name='pending'),
 
-   # path('dashboard', views.dashboard, name="dashboard"),
+    path('dashboard', views.DashBoardView.as_view(), name="dashboard"),
 
-    path('user-logout', views.user_logout, name="user-logout"),
-    path('logout/', LogoutView.as_view(), name='logout'),
+    path('user-logout', views.user_logout, name="logout"),
+    #path('logout/', LogoutView.as_view(), name='logout'),
     path('', views.HomePageView.as_view(), name='index'),
 ]
 
