@@ -3,13 +3,14 @@ from django.core.exceptions import ValidationError
 
 class User(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True) 
-    username = models.CharField(max_length=20)
+    username = models.CharField(max_length=20, unique = True)
     password = models.CharField(max_length=20)
-    phone_no = models.CharField('Phone Number',max_length=10)
-    email = models.CharField(max_length = 100)
+    phone_no = models.CharField('Phone Number',max_length=10, unique = True)
+    email = models.CharField(max_length = 100, unique = True)
     is_admin = models.BooleanField(null=False, default = False)
     user_created = models.DateTimeField(auto_now_add=True)  
-    user_updated = models.DateTimeField(auto_now_add=True) 
+    user_updated = models.DateTimeField(auto_now_add=True)
+    approved = models.BooleanField(db_column='approved',null = False, default = False) 
     class Meta:
         managed = False
         db_table = 'user'
@@ -40,7 +41,7 @@ class Club(models.Model):
     #associated_coordinator = models.CharField(blank=True, null=True)
     club_created = models.DateTimeField()  
     club_updated = models.DateTimeField() 
-
+     
     class Meta:
         managed = False
         db_table = 'club'
@@ -77,10 +78,21 @@ class ClubUser(models.Model):
     is_coord = models.BooleanField(default = False)
     created = models.DateTimeField()  
     updated = models.DateTimeField() 
-
+    is_approved = models.BooleanField(db_column='is_approved',null = False, default = False)
     class Meta:
         managed = False
         db_table = 'club_user'
+
+class EventUser(models.Model):
+    user = models.ForeignKey(User, on_delete = models.CASCADE,  null=False)
+    event = models.ForeignKey(Events, on_delete = models.CASCADE, null=False)
+    is_approved = models.BooleanField( null=False)
+    created = models.DateTimeField()  
+    updated = models.DateTimeField() 
+
+    class Meta:
+        managed = False
+        db_table = 'event_user'
 
 
 

@@ -5,19 +5,13 @@
 
 <body>
     {%block main%}
-
     <div class="container main">
         <div class="row">
             <div class="col-5 p-10">
-                <h2>Register</h1>
+                <h2>Pending Approval</h1>
                     <div class="card shadow">
                         <div class="card-body">
-                            <form method="post" action="">
-                                {% csrf_token %}
-                                {{ form.as_p }}
-                                <button class="btn btn-primary" type="submit" value="view" name="view">Register</button>
-
-                            </form>
+                            Your {{application_type}} is pending Admin approval. Please check back soon. 
                         </div>
                     </div>
             </div>
