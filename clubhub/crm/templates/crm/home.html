@@ -1,14 +1,14 @@
-{%extends 'crm/master.html'%}
+{% extends 'crm/master.html' %}
 {% load static %}
+
 <!DOCTYPE html>
 <html>
 
 <body>
   
-  {%block nav_item_home%}active
-  {%endblock %}
+  {% block nav_item_home %}active{% endblock %}
   
-  {%block main%}
+  {% block main %}
   <div class="container main">
     <h1>ClubHub</h1>
     <div class="card-deck">
@@ -39,9 +39,17 @@
         </div>
       </div>
     </div>
+
+    <!-- Add a button to log out and redirect to login.html -->
+    <div class="text-center mt-4">
+      <form action="{% url 'crm:login' %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Logout and Redirect to Login</button>
+      </form>
+    </div>
+
   </div>
-  </div>
-  {%endblock%}
+  {% endblock %}
 </body>
 
 </html>
