@@ -6,8 +6,8 @@
 <body>
   {%block main%}
   <div class="container main">
-    <h1>ClubHub</h1>
-    <div class="card-deck">
+    <h1>ClubHub Dashboard</h1>
+    <!--<div class="card-deck">
       <div class="card shadow p-2">
         <div class="card-header bg-white text-center">
           <h3>Club</h3>
@@ -33,7 +33,31 @@
           <p></p>
           <a class="stretched-link" href=""></a>
         </div>
-      </div>
+      </div>-->
+      <!-- Nav tabs -->
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#admin">Admin</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#club">Club Co-ordinator</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#user">My Memberships</a>
+        </li>
+        </ul>
+    
+        <!-- Tab panes -->
+        <div class="tab-content">
+        <div class="tab-pane container active" id="admin">
+
+        </div>
+        <div class="tab-pane container fade" id="club">
+
+        </div>
+        <div class="tab-pane container fade" id="user">
+            
+        </div>
     </div>
   </div>
   </div>
