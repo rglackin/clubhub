@@ -20,7 +20,9 @@ class HomePageView(generic.TemplateView):
         context['show_sidebar'] = False
         return context
 
-
+def user_logout(request):
+    auth.logout(request)
+    return redirect('crm:login')
 
 class RegisterFormView(generic.FormView):
     template_name = "crm/register.html"
