@@ -31,7 +31,7 @@ class ClubUserTable(tables.Table):
         #row_attrs = {'data-href': lambda record: record.get_absolute_url} 
 
 class ClubTable(tables.Table):
-    
+    detail = tables.TemplateColumn(template_name="crm/club_detail_button.html", verbose_name="")
     class Meta:
         model = Club
         template_name = "django_tables2/bootstrap4.html"
@@ -42,3 +42,4 @@ class ClubTable(tables.Table):
                 "class":"thead-dark text-white"
             }
             } 
+        #row_attrs = {'data-href': lambda record: record.get_absolute_url} 

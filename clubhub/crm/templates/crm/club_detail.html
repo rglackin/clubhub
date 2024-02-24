@@ -1,0 +1,28 @@
+{%extends 'crm/master.html'%}
+{% load static %}
+{% load render_table from django_tables2 %}
+<!DOCTYPE html>
+<html>
+
+<body>
+  
+  {%block main%}
+  <div class="container main">
+    <h1>{{object.name}}</h1>
+    <div class="card shadow">
+        <div class="card-body">
+            <p class="font-weight-bold">Active Since: {{created}}</p>    
+            <p class="">Description: {{object.description}}</p>  
+            <a class="btn btn-primary">Join Club</a>
+            <a class="btn btn-primary">Club Events</a>
+            {% if u.is_admin%}
+            <a class="btn btn-primary">Assign Co-ordinator</a>
+            {%endif%}
+        </div>
+    </div>
+    
+    
+  </div>
+  {%endblock%}
+</body>
+</html>

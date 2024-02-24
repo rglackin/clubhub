@@ -22,7 +22,9 @@ urlpatterns = [
 
     path('admin-approve/<int:pk>/<str:approved>', views.ApproveUserView.as_view(), name='approve'),
 
-    path('create-club', views.ClubCreateView.as_view(), name="create_club"),
+    path('club/create', views.ClubCreateView.as_view(), name="create_club"),
+    #TODO dont allow access if not logged in
+    path('club/<int:pk>',views.ClubDetailView.as_view(),name='club_detail'),
 ]
 
 

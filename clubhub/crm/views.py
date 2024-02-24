@@ -6,6 +6,7 @@ from . forms import *
 from .tables import *
 from django_tables2 import SingleTableView
 from django.core.exceptions import ObjectDoesNotExist
+import datetime
 
 from .models import *
 
@@ -149,9 +150,22 @@ class ClubCreateView(generic.CreateView):
         return reverse('crm:dashboard')    
 
 #TODO club list (listView)
-#TODO club detail (detailView)
+
+#TODO add club validity
+#TODO list events
 class ClubDetailView(generic.DetailView):
     model = Club
+    def get_context_data(self, **kwargs) :
+        context = super().get_context_data(**kwargs)
+        club = self.get_object()
+        date = club.club_created.date()
+        u_id= self.request.session.get('user_id')
+        u = User.objects.get(id=u_id)
+        context[show_sidebar] = True
+        context[back_btn] = dash_url
+        context['created'] = date.strftime("%B %Y")
+        context['u'] = u
+        return context
 
 
 #EVENT views 

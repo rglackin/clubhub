@@ -42,9 +42,13 @@ class Club(models.Model):
     description = models.TextField()
     club_created = models.DateTimeField(db_column='created')  
     club_updated = models.DateTimeField(db_column='updated') 
+
+    def get_absolute_url(self):
+        return(reverse('crm:club_detail',kwargs={'pk':self.club_id}))
     class Meta:
         managed = False
         db_table = 'club'
+    
 
 class Events(models.Model):
     event_id = models.AutoField(primary_key=True)
