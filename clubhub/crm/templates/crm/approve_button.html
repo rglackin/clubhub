@@ -1,0 +1,4 @@
+{% load static %}
+{% if not record.approved%}
+    <a href="{% url 'crm:index' %}" class="btn btn-primary">Approve</a>
+{%endif%}

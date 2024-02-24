@@ -29,21 +29,21 @@
   <div class="d-flex flex-column shadow sidebar " id="sidebar" aria-expanded="false" data-toggle="collapse">
     <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
       <li class="nav-item">
-        <a class="nav-link py-3 border-bottom {% block nav_item_home %}{% endblock nav_item_home %}"
-          href="">
-          <img src="{% static 'home/svg/house-door.svg'%}" width="24" height="24">
+        <a href=""
+          class="nav-link  py-3 border-bottom {% block nav_item_dashboard %}{% endblock nav_item_dashboard %}">
+          <img src="{% static 'crm/svg/dashboard.svg'%}" width="24" height="24">
         </a>
       </li>
       <li class="nav-item">
-        <a href=""
-          class="nav-link  py-3 border-bottom {% block nav_item_user_list %}{% endblock nav_item_user_list %}">
-          <img src="{% static 'home/svg/person.svg'%}" width="24" height="24">
+        <a class="nav-link py-3 border-bottom {% block nav_item_home %}{% endblock nav_item_home %}"
+          href="">
+          <img src="{% static 'crm/svg/house-door.svg'%}" width="24" height="24">
         </a>
       </li>
       <li class="nav-item">
         <a href=""
           class="nav-link  py-3 border-bottom {% block nav_item_add_user %}{% endblock nav_item_add_user %}">
-          <img src="{% static 'home/svg/person-plus.svg'%}" width="24" height="24">
+          <img src="{% static 'crm/svg/person-plus.svg'%}" width="24" height="24">
         </a>
       </li>
     </ul>
