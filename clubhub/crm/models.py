@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.urls import reverse
 
 class User(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True) 
@@ -32,6 +33,8 @@ class User(models.Model):
         if not self.phone_no.isdigit() or len(self.phone_no) != 9:
             raise ValidationError('Invalid phone number')
 
+    def get_absolute_url(self):
+        return(reverse('crm:index'))
 
 class Club(models.Model):
     club_id = models.AutoField(primary_key=True)
@@ -73,6 +76,7 @@ class Events(models.Model):
 
 
 class ClubUser(models.Model):
+    id = models.AutoField(primary_key=True)
     club = models.ForeignKey(Club, on_delete=models.CASCADE, default=0)
     user = models.ForeignKey(User, on_delete=models.CASCADE,default=0) 
     is_coord = models.BooleanField(default = False)

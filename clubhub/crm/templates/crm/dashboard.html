@@ -1,63 +1,53 @@
 {%extends 'crm/master.html'%}
 {% load static %}
+{% load render_table from django_tables2 %}
 <!DOCTYPE html>
 <html>
 
 <body>
+  {% block nav_item_dashboard %}active{% endblock nav_item_dashboard %}
   {%block main%}
   <div class="container main">
     <h1>ClubHub Dashboard</h1>
-    <!--<div class="card-deck">
-      <div class="card shadow p-2">
-        <div class="card-header bg-white text-center">
-          <h3>Club</h3>
-        </div>
-        <div class="card-body align-items-center d-flex justify-content-center">
-          <h1 class="display-1">s</h1>
-        </div>
-      </div>
-      <div class="card shadow p-2">
-        <div class="card-header bg-white text-center ">
-          <h3>Number of Times Recorded</h3>
-        </div>
-        <div class="card-body align-items-center d-flex justify-content-center">
-          <h1 class="display-1"></h1>
-        </div>
-      </div>
-      <div class="card shadow p-2 " >
-        <div class="card-header bg-white text-center">
-          <h3>Next Competition</h3>
-        </div>
-        <div class="card-body  text-center">
-          <h3 class=""></h3>
-          <p></p>
-          <a class="stretched-link" href=""></a>
-        </div>
-      </div>-->
-      <!-- Nav tabs -->
+
     <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#admin">Admin</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#club">Club Co-ordinator</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#user">My Memberships</a>
-        </li>
-        </ul>
-    
-        <!-- Tab panes -->
+      {% if user.is_admin %}
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#admin">Admin</a>
+      </li>
+      {% endif %}
+      {% if coord %}
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#club">Club Co-ordinator</a>
+      </li>
+      {% endif %}
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#user">My Memberships</a>
+      </li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="card shadow">
+      <div class="card-body">
         <div class="tab-content">
-        <div class="tab-pane container active" id="admin">
+          <div class="tab-pane container active" id="admin">
+            {% if table %}
+            {% render_table table %}
+            {% else%}
+            <p>Sorry, there are no current registered Users</p>
+            {%endif%}
+          </div>
+          <div class="tab-pane container fade" id="club">
+            {% if club_user_table%}
+            {% render_table club_user_table %}
+            {% else%}
+            <p>Sorry, there are no current members of this club</p>
+            {%endif%}
+          </div>
+          <div class="tab-pane container fade" id="user">
 
+          </div>
         </div>
-        <div class="tab-pane container fade" id="club">
-
-        </div>
-        <div class="tab-pane container fade" id="user">
-            
-        </div>
+      </div>
     </div>
   </div>
   </div>

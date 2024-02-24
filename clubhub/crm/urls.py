@@ -14,15 +14,13 @@ urlpatterns = [
     path('login/', views.LoginView.as_view(), name="login"),
     
 
-    #path('logout', views.LogoutView.as_view(),name='logout'),
-
     path('approval-pending', views.PendingRegisterView.as_view(),name='pending'),
 
     path('dashboard', views.DashBoardView.as_view(), name="dashboard"),
 
     path('user-logout', views.user_logout, name="logout"),
-    #path('logout/', LogoutView.as_view(), name='logout'),
-    path('', views.HomePageView.as_view(), name='index'),
+
+    path('admin-approve', views.ApproveUserView.as_view(), name='approve')
 ]
 
 
