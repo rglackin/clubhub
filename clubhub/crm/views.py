@@ -153,6 +153,7 @@ class ClubCreateView(generic.CreateView):
 
 #TODO add club validity
 #TODO list events
+
 class ClubDetailView(generic.DetailView):
     model = Club
     def get_context_data(self, **kwargs) :
