@@ -7,9 +7,11 @@ from .tables import *
 from django_tables2 import SingleTableView
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models import User, ClubUser
+from .models import *
 
-
+home_url ="crm:index"
+dash_url = "crm:dashboard"
+back_btn = 'back_btn'
 show_sidebar = 'show_sidebar'
 
 #HOME Page
@@ -30,6 +32,7 @@ class RegisterFormView(generic.FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context[show_sidebar] = False
+        context[back_btn] = home_url
         return context
     
     def form_valid(self, form):
@@ -48,6 +51,7 @@ class PendingRegisterView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         context =super().get_context_data(**kwargs)
         context['application_type'] = "account"
+        context[back_btn] = home_url
         return context
 
 #LOGIN/OUT Pages
@@ -65,6 +69,7 @@ class LoginView(generic.FormView):
     def get_context_data(self, **kwargs):
         context= super().get_context_data(**kwargs)
         context[show_sidebar] = False
+        context[back_btn] = home_url
         return context
 
 def user_logout(request):
@@ -88,7 +93,7 @@ class DashBoardView(SingleTableView):
         if user.is_admin:
             user_list = User.objects.filter(is_admin = False)
             context['user_list'] = user_list
-            #context['user_table'] = UserTable(user_list)
+            context['club_table'] = ClubTable(Club.objects.all())
         if coord:
             club_users = ClubUser.objects.filter(club = coord.club)
             context['club_users'] =  club_users
@@ -126,9 +131,28 @@ class ApproveUserView(generic.RedirectView):
 #TODO user update profile (updateView)
 
 #CLUB views
-#TODO club create (createView)
+class ClubCreateView(generic.CreateView):
+    model = Club
+    template_name = 'crm/create_club.html'
+    form_class = ClubForm
+    def get_context_data(self, **kwargs) :
+        context = super().get_context_data(**kwargs)
+        context[show_sidebar] = True
+        context[back_btn] = dash_url
+        return context
+    def form_valid(self, form):
+        #club = form.save()
+        form.clean()
+        return super().form_valid(form)
+    def get_success_url(self) :
+        
+        return reverse('crm:dashboard')    
+
 #TODO club list (listView)
 #TODO club detail (detailView)
+class ClubDetailView(generic.DetailView):
+    model = Club
+
 
 #EVENT views 
 #TODO event create(createView)

@@ -38,13 +38,10 @@ class User(models.Model):
 
 class Club(models.Model):
     club_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=20)
-    description = models.CharField(max_length=400)
-    validity_status = models.BooleanField(default = False)
-    #associated_coordinator = models.CharField(blank=True, null=True)
-    club_created = models.DateTimeField()  
-    club_updated = models.DateTimeField() 
-     
+    name = models.CharField('Club Name',max_length=20, unique = True)
+    description = models.TextField()
+    club_created = models.DateTimeField(db_column='created')  
+    club_updated = models.DateTimeField(db_column='updated') 
     class Meta:
         managed = False
         db_table = 'club'

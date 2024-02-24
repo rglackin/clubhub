@@ -2,7 +2,7 @@ CREATE TABLE club(
 club_id INT Primary key,
 name VARCHAR(20) UNIQUE,
 description VARChaR(100),
-validity_status BOOLEAN,
+
 created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -48,13 +48,12 @@ is_approved BOOLEAN,
 created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-FOREIGN KEY (event_id) REFERENCES event(event_id),
+FOREIGN KEY (event_id) REFERENCES events(event_id),
 FOREIGN KEY (user_id) REFERENCES user(ID)
 );
 CREATE TRIGGER set_as_admin
 AFTER INSERT ON USER 
 BEGIN
-    
 	UPDATE user
     SET is_admin = TRUE, approved = TRUE
     WHERE ID = NEW.ID AND (SELECT COUNT(*) FROM user) = 1;

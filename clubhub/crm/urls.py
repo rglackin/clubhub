@@ -20,7 +20,9 @@ urlpatterns = [
 
     path('user-logout', views.user_logout, name="logout"),
 
-    path('admin-approve/<int:pk>/<str:approved>', views.ApproveUserView.as_view(), name='approve')
+    path('admin-approve/<int:pk>/<str:approved>', views.ApproveUserView.as_view(), name='approve'),
+
+    path('create-club', views.ClubCreateView.as_view(), name="create_club"),
 ]
 
 
