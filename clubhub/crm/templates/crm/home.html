@@ -20,11 +20,13 @@
       <h1 class="p-5" style="font-style: italic; font-size: 5rem">ClubHub</h1>
     </div>
 
+
     <style>
       .custom-btn {
         font-size: 2rem;
         padding: 40px 200px;
       }
+
 
       .custom2-logout-btn,
       .custom-logout-btn {
@@ -40,6 +42,7 @@
       <a class="btn btn-primary custom-btn" href="{% url 'crm:login' %}">Login</a>
     </div>
 
+
     <!-- register-->
     <div class="text-center" style="position: absolute; top: 360px; left: 30px; width: 100%;">
       <form action="{% url 'crm:register' %}" method="post" style="display: inline;">
@@ -54,6 +57,7 @@
         {% csrf_token %}
         <button type="submit" class="btn btn-danger custom-btn custom-logout-btn">Logout</button>
       </form>
+
     </div>
 
   </div>

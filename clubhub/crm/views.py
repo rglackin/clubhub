@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.views import generic
 from django.urls import reverse, reverse_lazy
@@ -10,19 +10,30 @@ from . forms import *
 from django.contrib.auth.models import auth
 
 #TODO make columns unique
-
+show_sidebar = 'show_sidebar'
 #this is the user that is logged in
-session_user = None
+
 class HomePageView(generic.TemplateView):
     template_name = "crm/home.html"
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['show_sidebar'] = False
+        context[show_sidebar] = False
+        return context
+
+class DashBoardView(generic.TemplateView):
+    template_name = "crm/dashboard.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context[show_sidebar] = True
+        #context['user'] = session_user
         return context
 
 def user_logout(request):
-    auth.logout(request)
-    return redirect('crm:login')
+    #auth.logout(request)
+    request.session['user_id'] = None
+    return redirect('crm:index')
 
 class RegisterFormView(generic.FormView):
     template_name = "crm/register.html"
@@ -31,7 +42,7 @@ class RegisterFormView(generic.FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['show_sidebar'] = False
+        context[show_sidebar] = False
         return context
     
     def form_valid(self, form):
@@ -39,6 +50,7 @@ class RegisterFormView(generic.FormView):
         username = form.cleaned_data['username']
         object = User.objects.get(username=username)
         if object.approved:
+            self.request.session['user_id'] = object.id
             self.success_url =  reverse('crm:index')
         else:
             self.success_url =  reverse('crm:pending')
@@ -72,14 +84,14 @@ class PendingRegisterView(generic.TemplateView):
         context['application_type'] = "account"
         return context
 
+
 class LoginView(generic.FormView):
     template_name = 'crm/login.html'
     form_class = LoginForm
     def form_valid(self, form):
-        #username = form.cleaned_data['username']
-        #password = form.cleaned_data['password']
-        session_user = form.login()
-        if session_user.approved == False:   
+        object = form.login() 
+        self.request.session['user_id'] = object.id
+        if object.approved == False:   
             self.success_url = reverse('crm:pending')
             
         else:
@@ -87,7 +99,7 @@ class LoginView(generic.FormView):
         return super().form_valid(form)
     def get_context_data(self, **kwargs):
         context= super().get_context_data(**kwargs)
-        context['show_sidebar'] = False
+        context[show_sidebar] = False
         return context
 class LogoutView():
     template_name = 'crm/logout.html'
@@ -118,24 +130,8 @@ class LogoutView():
     return render(request, 'crm/my-login.html', context=context )"""
 
 
-def user_logout(request):
+#def user_logout(request):
 
-    auth.logout(request)
+ #   auth.logout(request)
 
-    return redirect("")
-
-
-
-
-"""@login_required(login_url="my-login")
-def dashboard(request):
-
-    return render(request, 'crm/dashboard.html' )
-
-# superuser oisinfrizzell password Curry123"""
-
-
-
-
-
-
+  #  return redirect("")"""

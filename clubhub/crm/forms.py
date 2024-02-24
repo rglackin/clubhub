@@ -29,7 +29,8 @@ class LoginForm(forms.Form):
     def authenticate(self, name, passwd):
         try:
             record = User.objects.get(username = name, password = passwd)
-        except:
+        except Exception as e:
+            print(e)
             record = None
         return record
     def clean(self):
