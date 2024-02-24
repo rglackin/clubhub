@@ -64,15 +64,6 @@ class Events(models.Model):
         managed = False
         db_table = 'events'
 
-"""class ClubEvents(models.Model):
-    club = models.ForeignKey(Club, models.DO_NOTHING, blank=True, null=True)
-    event = models.ForeignKey('Events', models.DO_NOTHING, blank=True, null=True)
-    created = models.DateTimeField()  
-    updated = models.DateTimeField() 
-
-    class Meta:
-        managed = False
-        db_table = 'club_events'"""
 
 
 class ClubUser(models.Model):

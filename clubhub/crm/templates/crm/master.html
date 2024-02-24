@@ -29,7 +29,7 @@
   <div class="d-flex flex-column shadow sidebar " id="sidebar" aria-expanded="false" data-toggle="collapse">
     <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
       <li class="nav-item">
-        <a href=""
+        <a href="{% url 'crm:dashboard' %}"
           class="nav-link  py-3 border-bottom {% block nav_item_dashboard %}{% endblock nav_item_dashboard %}">
           <img src="{% static 'crm/svg/dashboard.svg'%}" width="24" height="24">
         </a>
@@ -47,6 +47,7 @@
         </a>
       </li>
     </ul>
+    <a href="{% url 'crm:logout' %}" class="nav-link  py-3 border-bottom ">Logout</a>
   </div>
   {%endif%}
   

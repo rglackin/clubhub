@@ -1,4 +1,4 @@
 {% load static %}
 {% if not record.approved%}
-    <a href="{% url 'crm:index' %}" class="btn btn-danger">Deny</a>
+    <a href="{% url 'crm:approve' pk=record.id approved='false'  %}"  class="btn btn-danger">Deny</a>
 {%endif%}

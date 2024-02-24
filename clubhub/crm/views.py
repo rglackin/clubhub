@@ -6,16 +6,13 @@ from . forms import *
 from .tables import *
 from django_tables2 import SingleTableView
 from django.core.exceptions import ObjectDoesNotExist
-#from django.contrib.auth.decorators import login_required
 
-# Authentication models and functions
 from .models import User, ClubUser
-#from django.contrib.auth.models import auth
 
-#TODO make columns unique
+
 show_sidebar = 'show_sidebar'
-#this is the user that is logged in
 
+#HOME Page
 class HomePageView(generic.TemplateView):
     template_name = "crm/home.html"
     
@@ -24,6 +21,57 @@ class HomePageView(generic.TemplateView):
         context[show_sidebar] = False
         return context
 
+#REGISTER pages
+class RegisterFormView(generic.FormView):
+    template_name = "crm/register.html"
+    form_class= RegisterForm
+    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context[show_sidebar] = False
+        return context
+    
+    def form_valid(self, form):
+        form.save()
+        username = form.cleaned_data['username']
+        object = User.objects.get(username=username)
+        if object.approved:
+            self.request.session['user_id'] = object.id
+            self.success_url =  reverse('crm:dashboard')
+        else:
+            self.success_url =  reverse('crm:pending')
+        return super(RegisterFormView, self).form_valid(form)
+
+class PendingRegisterView(generic.TemplateView):
+    template_name = 'crm/pending.html'
+    def get_context_data(self, **kwargs):
+        context =super().get_context_data(**kwargs)
+        context['application_type'] = "account"
+        return context
+
+#LOGIN/OUT Pages
+class LoginView(generic.FormView):
+    template_name = 'crm/login.html'
+    form_class = LoginForm
+    def form_valid(self, form):
+        object = form.login() 
+        self.request.session['user_id'] = object.id
+        if object.approved == False:   
+            self.success_url = reverse('crm:pending')
+        else:
+            self.success_url = reverse('crm:dashboard')
+        return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        context= super().get_context_data(**kwargs)
+        context[show_sidebar] = False
+        return context
+
+def user_logout(request):
+    request.session['user_id'] = None
+    return redirect('crm:index')
+
+#DASHBOARD Views
 class DashBoardView(SingleTableView):
     template_name = "crm/dashboard.html"
     model = User
@@ -54,60 +102,40 @@ class DashBoardView(SingleTableView):
             print(e)
             return None
 
-
 class ApproveUserView(generic.RedirectView):
-    
-    print("e")
-
-def user_logout(request):
-    request.session['user_id'] = None
-    return redirect('crm:index')
-
-class RegisterFormView(generic.FormView):
-    template_name = "crm/register.html"
-    form_class= RegisterForm
-    
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context[show_sidebar] = False
-        return context
-    
-    def form_valid(self, form):
-        form.save()
-        username = form.cleaned_data['username']
-        object = User.objects.get(username=username)
-        if object.approved:
-            self.request.session['user_id'] = object.id
-            self.success_url =  reverse('crm:index')
+    model = User
+    #fields = None
+    def get(self, request, approved,pk) -> HttpResponse:
+        self.user = User.objects.get(id=pk)
+        approved_value = approved.lower() == 'true'
+        if approved_value:
+            self.user.approved = True
+            self.user.save()
         else:
-            self.success_url =  reverse('crm:pending')
-        return super(RegisterFormView, self).form_valid(form)
+            #delete user if not approved
+            self.user.delete()
+            print('false')
+            return redirect('crm:dashboard')
+        return super().get(request)
+    def get_success_url(self):
+        return reverse('crm:dashboard')
+#TODO approve club user 
 
-class PendingRegisterView(generic.TemplateView):
-    template_name = 'crm/pending.html'
-    def get_context_data(self, **kwargs):
-        context =super().get_context_data(**kwargs)
-        context['application_type'] = "account"
-        return context
+#USER views
+#TODO user profile (detailView) 
+#TODO user update profile (updateView)
 
+#CLUB views
+#TODO club create (createView)
+#TODO club list (listView)
+#TODO club detail (detailView)
 
-class LoginView(generic.FormView):
-    template_name = 'crm/login.html'
-    form_class = LoginForm
-    def form_valid(self, form):
-        object = form.login() 
-        self.request.session['user_id'] = object.id
-        if object.approved == False:   
-            self.success_url = reverse('crm:pending')
-        else:
-            self.success_url = reverse('crm:dashboard')
-        return super().form_valid(form)
-    def get_context_data(self, **kwargs):
-        context= super().get_context_data(**kwargs)
-        context[show_sidebar] = False
-        return context
-class LogoutView():
-    template_name = 'crm/logout.html'
+#EVENT views 
+#TODO event create(createView)
+#TODO event list (listView)
+#TODO event join 
+#TODO event approval (trigger for event approval)
     
-
+#REPORTS
+#only accessible by admin
+# displays view results

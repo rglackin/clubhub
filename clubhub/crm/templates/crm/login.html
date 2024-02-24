@@ -8,7 +8,7 @@
 
     <div class="container main">
         <div class="row">
-            <div class="col-5 p-10">
+            <div class="col-5 p-5">
                 <h2>Login</h1>
                     <div class="card shadow">
                         <div class="card-body">
@@ -16,13 +16,15 @@
                                 {% csrf_token %}
                                 {{ form.as_p }}
                                 <button class="btn btn-primary" type="submit">Login</button>
-
+                                
                             </form>
                         </div>
                     </div>
             </div>
+            
 
         </div>
+        {% include 'crm/back_to_home.html'%}
     </div>
     {%endblock%}
 </body>

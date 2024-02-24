@@ -13,7 +13,7 @@ CREATE TABLE user (
 	phone_no TEXT UNIQUE not null,
 	email TEXT UNIQUE not null,
 	is_admin BOOLEAN DEFAULT 0,
-	approved BOOLEAN DEFAULT FALSE,
+	is_approved BOOLEAN DEFAULT FALSE,
 	user_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	user_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 	);
