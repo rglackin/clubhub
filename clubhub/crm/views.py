@@ -6,6 +6,9 @@ from . forms import *
 from .tables import *
 from django_tables2 import SingleTableView
 from django.core.exceptions import ObjectDoesNotExist
+from django.views import View
+from django.views.generic import DetailView
+from .models import Club
 #from django.contrib.auth.decorators import login_required
 
 # Authentication models and functions
@@ -109,5 +112,41 @@ class LoginView(generic.FormView):
         return context
 class LogoutView():
     template_name = 'crm/logout.html'
+
+
+
+
+class ClubListView(View):
+    template_name = 'crm/clubs_list.html'
+
+    def get(self, request, *args, **kwargs):
+        clubs = Club.objects.all()
+        return render(request, self.template_name, {'clubs': clubs})
+    
+
+
+
+class ClubDetailView(DetailView):
+    model = Club
+    template_name = 'crm/club_detail.html'  # Adjust this path as needed
+    context_object_name = 'club'
+
+
+    # when redircting rory jsut add if statment
+    
+   # if club_id:
+            # Replace the URLs with the ones you want to redirect to based on club_id
+          #  if club_id == '1':
+              #  return redirect(reverse('crm:club_detail', kwargs={'pk': club_id}))
+           # elif club_id == '2':
+               # return redirect('url')
+
+
+
+
+
+
+
+
     
 

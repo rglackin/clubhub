@@ -38,16 +38,21 @@ class User(models.Model):
 
 class Club(models.Model):
     club_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=20)
-    description = models.CharField(max_length=400)
-    validity_status = models.BooleanField(default = False)
-    #associated_coordinator = models.CharField(blank=True, null=True)
-    club_created = models.DateTimeField()  
-    club_updated = models.DateTimeField() 
-     
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    validity_status = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
     class Meta:
         managed = False
         db_table = 'club'
+
+    def get_absolute_url(self):
+        return reverse('crm:club_detail', args=[str(self.id)])
 
 class Events(models.Model):
     event_id = models.AutoField(primary_key=True)
@@ -97,6 +102,11 @@ class EventUser(models.Model):
     class Meta:
         managed = False
         db_table = 'event_user'
+
+
+
+
+
 
 
 
