@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from .models import User
-
+import logging
 
 class CheckLoggedIn:
     def __init__(self, get_response):
@@ -15,11 +15,14 @@ class CheckLoggedIn:
             user_id = request.session.get('user_id')
             approved = False
             try:
+                logging.debug('mw.call called')
                 user = User.objects.get(id = user_id)
                 approved = user.approved
             except User.DoesNotExist:
+                logging.debug('mw.usernotexist called')
                 pass
             if not user_id or not approved :
+                logging.debug('mw.notuser called')
                 return HttpResponseRedirect(reverse('crm:index'))
         return response
 

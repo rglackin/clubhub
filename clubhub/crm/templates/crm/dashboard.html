@@ -56,8 +56,8 @@
         {% if coord %}
         <div class="tab-pane container fade" id="clubuser">
           <div class="card-body">
-            {% if club_user_table%}
-            {% render_table club_user_table %}
+            {% if club_users_table %}
+            {% render_table club_users_table %}
             {% else%}
             <p>Sorry, there are no current members of this club</p>
             {%endif%}
