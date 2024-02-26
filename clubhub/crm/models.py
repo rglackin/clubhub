@@ -38,6 +38,7 @@ class User(models.Model):
 
 class Club(models.Model):
     club_id = models.AutoField(primary_key=True)
+"""
     name = models.CharField(max_length=255)
     description = models.TextField()
     validity_status = models.BooleanField(default=False)
@@ -47,12 +48,20 @@ class Club(models.Model):
     def __str__(self):
         return self.name
 
+======="""
+    name = models.CharField('Club Name',max_length=20, unique = True)
+    description = models.TextField()
+    club_created = models.DateTimeField(db_column='created')  
+    club_updated = models.DateTimeField(db_column='updated') 
+
+    def get_absolute_url(self):
+        return(reverse('crm:club_detail',kwargs={'pk':self.club_id}))
     class Meta:
         managed = False
         db_table = 'club'
 
-    def get_absolute_url(self):
-        return reverse('crm:club_detail', args=[str(self.id)])
+   """ def get_absolute_url(self):
+        return reverse('crm:club_detail', args=[str(self.id)])"""
 
 class Events(models.Model):
     event_id = models.AutoField(primary_key=True)
@@ -69,15 +78,6 @@ class Events(models.Model):
         managed = False
         db_table = 'events'
 
-"""class ClubEvents(models.Model):
-    club = models.ForeignKey(Club, models.DO_NOTHING, blank=True, null=True)
-    event = models.ForeignKey('Events', models.DO_NOTHING, blank=True, null=True)
-    created = models.DateTimeField()  
-    updated = models.DateTimeField() 
-
-    class Meta:
-        managed = False
-        db_table = 'club_events'"""
 
 
 class ClubUser(models.Model):

@@ -21,10 +21,18 @@ urlpatterns = [
 
     path('user-logout', views.user_logout, name="logout"),
 
-    path('admin-approve', views.ApproveUserView.as_view(), name='approve'),
 
-    path('club_detail/<int:pk>/', ClubDetailView.as_view(), name='club_detail'),
+    
+
+   
     path('club_list/', ClubListView.as_view(), name='club_list'),
+
+
+    path('admin-approve/<int:pk>/<str:approved>', views.ApproveUserView.as_view(), name='approve'),
+
+    path('club/create', views.ClubCreateView.as_view(), name="create_club"),
+    #TODO dont allow access if not logged in
+    path('club/<int:pk>',views.ClubDetailView.as_view(),name='club_detail'),
 
 ]
 

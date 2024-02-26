@@ -13,12 +13,15 @@
     <ul class="nav nav-tabs">
       {% if user.is_admin %}
       <li class="nav-item">
-        <a class="nav-link active" data-toggle="tab" href="#admin">Admin</a>
+        <a class="nav-link" data-toggle="tab" href="#admin">Admin</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#club">Clubs</a>
       </li>
       {% endif %}
       {% if coord %}
       <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#club">Club Co-ordinator</a>
+        <a class="nav-link" data-toggle="tab" href="#clubuser">Club Co-ordinator</a>
       </li>
       {% endif %}
       <li class="nav-item">
@@ -27,31 +30,48 @@
     </ul>
     <!-- Tab panes -->
     <div class="card shadow">
-      <div class="card-body">
-        <div class="tab-content">
-          <div class="tab-pane container active" id="admin">
+
+      <div class="tab-content">
+        {%if user.is_admin %}
+        <div class="tab-pane container fade" id="admin">
+          <div class="card-body">
             {% if table %}
             {% render_table table %}
             {% else%}
             <p>Sorry, there are no current registered Users</p>
             {%endif%}
           </div>
-          <div class="tab-pane container fade" id="club">
+        </div>
+        <div class="tab-pane container fade" id="club">
+          <div class="card-body">
+            {% if club_table %}
+            {% render_table club_table %}
+            {% else%}
+            <p>Sorry, there are currently no registered Clubs</p>
+            {%endif%}
+            <a class="btn btn-primary " href="{% url 'crm:create_club' %}">Create Club</a>
+          </div>
+        </div>
+        {% endif %}
+        {% if coord %}
+        <div class="tab-pane container fade" id="clubuser">
+          <div class="card-body">
             {% if club_user_table%}
             {% render_table club_user_table %}
             {% else%}
             <p>Sorry, there are no current members of this club</p>
             {%endif%}
           </div>
-          <div class="tab-pane container fade" id="user">
-
+        </div>
+        {%endif%}
+        <div class="tab-pane container fade" id="user">
+          <div class="card-body">
+            <p>You are not currently a member of any clubs</p>
           </div>
         </div>
       </div>
     </div>
   </div>
-  </div>
   {%endblock%}
 </body>
-
 </html>

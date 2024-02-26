@@ -49,7 +49,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "crm.middleware.CheckLoggedIn"
+    "crm.middleware.CheckLoggedIn",
+    "crm.middleware.CheckAdmin"
 ]
 
 ROOT_URLCONF = "clubhub.urls"

@@ -1,6 +1,7 @@
 
+from typing import Any
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from crm.models import User
+from .models import *
 
 from django import forms
 
@@ -34,7 +35,6 @@ class LoginForm(forms.Form):
             record = None
         return record
     def clean(self):
-        
         username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
         user = self.authenticate(username, password)
@@ -49,5 +49,10 @@ class LoginForm(forms.Form):
 
 
 
-
+class ClubForm(forms.ModelForm):
+    class Meta:
+        model= Club
+        fields = ('name','description')
+        
+    
 
