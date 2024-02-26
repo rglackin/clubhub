@@ -78,7 +78,7 @@ class ClubUser(models.Model):
     is_coord = models.BooleanField(default = False)
     created = models.DateTimeField(auto_now_add=True)  
     updated = models.DateTimeField(auto_now_add=True) 
-    is_approved = models.BooleanField(db_column='is_approved',null = False, default = False)
+    is_approved = models.BooleanField('Membership Status',db_column='is_approved',null = False, default = False)
     class Meta:
         managed = False
         db_table = 'club_user'
@@ -86,7 +86,7 @@ class ClubUser(models.Model):
     def create(cls, club_id,user_id):
         club = Club.objects.get(club_id = club_id)
         user = User.objects.get(id =user_id )
-        clubuser = cls(club=club, user=user)
+        return cls(club=club, user=user)
 class EventUser(models.Model):
     user = models.ForeignKey(User, on_delete = models.CASCADE,  null=False)
     event = models.ForeignKey(Events, on_delete = models.CASCADE, null=False)

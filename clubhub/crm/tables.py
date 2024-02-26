@@ -18,9 +18,12 @@ class UserTable(tables.Table):
             } 
 
 class ClubUserTable(tables.Table):
+    approve = tables.TemplateColumn(template_name="crm/approve_member.html", verbose_name="")
+    deny = tables.TemplateColumn(template_name="crm/deny_member.html", verbose_name="")
     class Meta:
         model = ClubUser
         template_name = "django_tables2/bootstrap4.html"
+        fields = ("user__username","is_approved")
         #fields = ('__all__') 
         attrs = {
             "class":"table table-striped shadow table-hover sortable",
@@ -42,4 +45,18 @@ class ClubTable(tables.Table):
                 "class":"thead-dark text-white"
             }
             } 
+        #row_attrs = {'data-href': lambda record: record.get_absolute_url} 
+
+class MembershipTable(tables.Table):
+    
+    class Meta:
+        model = ClubUser
+        template_name = "django_tables2/bootstrap4.html"
+        fields = ('club__name','is_approved') 
+        attrs = {
+            "class":"table table-striped shadow table-hover sortable",
+            "thead":{
+                "class":"thead-dark text-white"
+            }
+            }    
         #row_attrs = {'data-href': lambda record: record.get_absolute_url} 

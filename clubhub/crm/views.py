@@ -7,7 +7,7 @@ from . forms import *
 from .tables import *
 from django_tables2 import SingleTableView
 from django.core.exceptions import ObjectDoesNotExist
-
+import logging
 from django.views import View
 from django.views.generic import DetailView
 from .models import Club
@@ -136,6 +136,10 @@ class DashBoardView(SingleTableView):
             club_users = ClubUser.objects.filter(club = coord.club)
             context['club_users'] =  club_users
             context['club_users_table'] = ClubUserTable(club_users)
+        if not user.is_admin:
+            memberships = ClubUser.objects.filter(user = user)
+            context['memberships'] = memberships
+            context['member_table'] = MembershipTable(memberships) 
         return context
 
     def check_coord(self, session_user):
@@ -165,7 +169,8 @@ class ApproveUserView(generic.RedirectView):
 #TODO approve club user 
 
 #USER views
-#TODO user profile (detailView) 
+#TODO user profile (detailView)
+ 
 #TODO user update profile (updateView)
 
 #CLUB views
@@ -197,7 +202,23 @@ class ClubListView(generic.ListView):
         clubs = Club.objects.all()
         return render(request, self.template_name, {'clubs': clubs})"""
     
-
+class ApproveClubUserView(generic.RedirectView):
+    model = ClubUser
+    #fields = None
+    def get(self, request, approved,pk) -> HttpResponse:
+        self.clubUser = ClubUser.objects.get(id=pk)
+        approved_value = approved.lower() == 'true'
+        if approved_value:
+            self.clubUser.is_approved = True
+            self.clubUser.save()
+        else:
+            #delete user if not approved
+            self.clubUser.delete()
+            print('false')
+            return redirect('crm:dashboard')
+        return super().get(request)
+    def get_redirect_url(self):
+        return reverse('crm:dashboard')
 #TODO add club validity
 #TODO list events
 
@@ -213,20 +234,40 @@ class ClubDetailView(generic.DetailView):
         context[back_btn] = dash_url
         context['created'] = date.strftime("%B %Y")
         context['u'] = u
+        context['is_member'] = self.is_member(u)
         return context
+    def is_member(self,user):
+        club = self.get_object()
+        try:
+            member = ClubUser.objects.get(user = user,club = club )
+        except ObjectDoesNotExist:
+            return False
+        return True
+def joinClub(request, pk):
+    club_id = pk 
+    user_id = request.session['user_id']
+    #user = User.objects.get(id=user_id)
+    membership = ClubUser.create(club_id,user_id)
+    membership.save()
+    return redirect('crm:dashboard')
 
 class ClubJoinView(generic.RedirectView):
     model = ClubUser
     #fields = None
     def get(self, request, pk):
         #self.user = User.objects.get(id=pk)
+        logging.debug('GET called')
         club_id =  self.kwargs['pk'] 
         user_id = self.request.session['user_id']
         #user = User.objects.get(id=user_id)
-        ClubUser.create(club_id,user_id)
+        membership = ClubUser.create(club_id,user_id)
+        membership.save()
         return super().get(request)
-    def get_success_url(self):
-        return reverse('crm:dashboard')
+    
+    def get_redirect_url(self):
+        logging.debug('redirect called')
+        return redirect('crm:dashboard')
+    
 
 class ClubCoordinatorCreateView(generic.FormView):
     model = ClubUser
