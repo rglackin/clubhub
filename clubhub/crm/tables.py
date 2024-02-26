@@ -43,3 +43,17 @@ class ClubTable(tables.Table):
             }
             } 
         #row_attrs = {'data-href': lambda record: record.get_absolute_url} 
+
+class MembershipTable(tables.Table):
+    
+    class Meta:
+        model = ClubUser
+        template_name = "django_tables2/bootstrap4.html"
+        fields = ('club__name','is_approved') 
+        attrs = {
+            "class":"table table-striped shadow table-hover sortable",
+            "thead":{
+                "class":"thead-dark text-white"
+            }
+            }    
+        #row_attrs = {'data-href': lambda record: record.get_absolute_url} 

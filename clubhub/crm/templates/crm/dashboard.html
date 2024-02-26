@@ -64,11 +64,17 @@
           </div>
         </div>
         {%endif%}
+        {%if memberships%}
         <div class="tab-pane container fade" id="user">
           <div class="card-body">
+            {% if member_table%}
+            {% render_table member_table %}
+            {%else%}
             <p>You are not currently a member of any clubs</p>
+            {% endif %}
           </div>
         </div>
+        {%endif%}
       </div>
     </div>
   </div>

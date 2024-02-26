@@ -136,6 +136,10 @@ class DashBoardView(SingleTableView):
             club_users = ClubUser.objects.filter(club = coord.club)
             context['club_users'] =  club_users
             context['club_users_table'] = ClubUserTable(club_users)
+        if not user.is_admin:
+            memberships = ClubUser.objects.filter(user = user)
+            context['memberships'] = memberships
+            context['member_table'] = MembershipTable(memberships) 
         return context
 
     def check_coord(self, session_user):
@@ -165,7 +169,8 @@ class ApproveUserView(generic.RedirectView):
 #TODO approve club user 
 
 #USER views
-#TODO user profile (detailView) 
+#TODO user profile (detailView)
+ 
 #TODO user update profile (updateView)
 
 #CLUB views
@@ -213,7 +218,15 @@ class ClubDetailView(generic.DetailView):
         context[back_btn] = dash_url
         context['created'] = date.strftime("%B %Y")
         context['u'] = u
+        context['is_member'] = self.is_member(u)
         return context
+    def is_member(self,user):
+        club = self.get_object()
+        try:
+            member = ClubUser.objects.get(user = user,club = club )
+        except ObjectDoesNotExist:
+            return False
+        return True
 
 class ClubJoinView(generic.RedirectView):
     model = ClubUser
@@ -223,9 +236,11 @@ class ClubJoinView(generic.RedirectView):
         club_id =  self.kwargs['pk'] 
         user_id = self.request.session['user_id']
         #user = User.objects.get(id=user_id)
-        ClubUser.create(club_id,user_id)
+        membership = ClubUser.create(club_id,user_id)
+        membership.save()
         return super().get(request)
-    def get_success_url(self):
+    
+    def get_redirect_url(self):
         return reverse('crm:dashboard')
 
 class ClubCoordinatorCreateView(generic.FormView):
