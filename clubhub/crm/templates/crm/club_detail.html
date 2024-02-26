@@ -16,7 +16,7 @@
             {% if not is_member%}
             <a class="btn btn-primary" href="{% url 'crm:club_join' club.club_id %}" >Join Club</a>
             {% endif %}
-            <a class="btn btn-primary">Club Events</a>
+            <a class="btn btn-primary" href = "{% url 'crm:event_list' club.club_id %}">Club Events</a>
             {% if u.is_admin%}
             <a class="btn btn-primary" href = "{% url 'crm:coord' club.club_id %}">Assign Co-ordinator</a>
             {%endif%}

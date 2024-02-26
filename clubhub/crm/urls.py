@@ -28,7 +28,9 @@ urlpatterns = [
     path('club/coord/<int:pk>', views.ClubCoordinatorCreateView.as_view(), name = 'coord'),
     path('club/<int:pk>',views.ClubDetailView.as_view(),name='club_detail'),
     
-    path('club/event/create/<int:pk>', views.EventCreateView.as_view(),name='create_event')
+    path('club/event/create/<int:pk>', views.EventCreateView.as_view(),name='create_event'),
+    path('club/event/list/<int:pk>', views.EventListView.as_view(), name='event_list'),
+    #path('club/')
 
 ]
 

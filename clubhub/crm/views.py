@@ -13,7 +13,7 @@ from django.views import View
 from django.views.generic import DetailView
 from .models import Club
 #from django.contrib.auth.decorators import login_required
-
+from django.utils import timezone
 import datetime
 
 
@@ -305,10 +305,29 @@ class EventCreateView(generic.CreateView):
     def get_success_url(self):
         return reverse('crm:dashboard')
 #TODO event list (listView)
-
+class EventListView(generic.ListView):
+    model = Events
+    club = None
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context[show_sidebar] = True
+        context['club'] = self.club
+        return context
+    def get_queryset(self):
+        club_id = self.kwargs['pk']
+        self.club = Club.objects.get(club_id =club_id)
+        now = timezone.now()
+        querySet =  Events.objects.filter(date__gte = now, club =self.club )
+        
+        return querySet
+#Event detail
+class EventDetailView(generic.DetailView):
+    def get_context_data(self, **kwargs):
+        
+        return super().get_context_data(**kwargs)
 #TODO event join 
 #TODO event approval (trigger for event approval)
-    
+
 #REPORTS
 #only accessible by admin
 # displays view results
