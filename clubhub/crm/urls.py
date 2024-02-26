@@ -1,6 +1,7 @@
 from django.urls import path
 from django.contrib.auth.views import LogoutView
 from . import views
+from .views import ClubDetailView, ClubListView
 
 
 app_name = 'crm'
@@ -20,11 +21,19 @@ urlpatterns = [
 
     path('user-logout', views.user_logout, name="logout"),
 
+
+    
+
+   
+    path('club_list/', ClubListView.as_view(), name='club_list'),
+
+
     path('admin-approve/<int:pk>/<str:approved>', views.ApproveUserView.as_view(), name='approve'),
 
     path('club/create', views.ClubCreateView.as_view(), name="create_club"),
     #TODO dont allow access if not logged in
     path('club/<int:pk>',views.ClubDetailView.as_view(),name='club_detail'),
+
 ]
 
 
