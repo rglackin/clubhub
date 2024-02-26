@@ -56,7 +56,18 @@ class ClubCoordForm(forms.ModelForm):
     class Meta:
         model = ClubUser
         fields = ('user',)
+        
     def __init__(self, *args, user_queryset=None, **kwargs):
         super().__init__(*args, **kwargs)
         if user_queryset is not None:
             self.fields['user'].queryset = user_queryset
+        
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Events
+        fields = ('event_name','description','venue','date','time')
+        widgets = {
+            'date': forms.SelectDateWidget(),
+            'time': forms.TimeInput(),
+        }

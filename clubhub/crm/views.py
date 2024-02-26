@@ -1,4 +1,5 @@
 from django.db.models.query import QuerySet
+from django.forms import BaseModelForm
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.views import generic
@@ -37,7 +38,6 @@ class RegisterFormView(generic.FormView):
     template_name = "crm/register.html"
     form_class= RegisterForm
     
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context[show_sidebar] = False
@@ -99,16 +99,7 @@ class ClubDetailView(DetailView):
               #  return redirect(reverse('crm:club_detail', kwargs={'pk': club_id}))
            # elif club_id == '2':
                # return redirect('url')
-
-
-
 """
-
-
-
-
-
-
 def user_logout(request):
     request.session['user_id'] = None
     return redirect('crm:index')
@@ -128,12 +119,14 @@ class DashBoardView(SingleTableView):
         coord = self.check_coord(user)
         context['coord'] = coord
         
+        
         if user.is_admin:
             user_list = User.objects.filter(is_admin = False)
             context['user_list'] = user_list
             context['club_table'] = ClubTable(Club.objects.all())
         if coord:
             club_users = ClubUser.objects.filter(club = coord.club)
+            #context['coord_club'] = coord.club.club_id
             context['club_users'] =  club_users
             context['club_users_table'] = ClubUserTable(club_users)
         if not user.is_admin:
@@ -170,7 +163,6 @@ class ApproveUserView(generic.RedirectView):
 
 #USER views
 #TODO user profile (detailView)
- 
 #TODO user update profile (updateView)
 
 #CLUB views
@@ -297,7 +289,23 @@ class ClubCoordinatorCreateView(generic.FormView):
         return super().form_valid(form)
 #EVENT views 
 #TODO event create(createView)
+class EventCreateView(generic.CreateView):
+    model = Events
+    form_class = EventForm
+    def get_context_data(self, **kwargs) :
+        context =super().get_context_data(**kwargs)
+        context[show_sidebar] = True
+        return context
+    def form_valid(self, form):
+        object = form.save(commit=False)
+        club_id = self.kwargs['pk']
+        object.club = Club.objects.get(club_id=club_id)
+        object.save()
+        return super().form_valid(form)
+    def get_success_url(self):
+        return reverse('crm:dashboard')
 #TODO event list (listView)
+
 #TODO event join 
 #TODO event approval (trigger for event approval)
     

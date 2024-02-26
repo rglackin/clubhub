@@ -57,7 +57,7 @@ class Club(models.Model):
 class Events(models.Model):
     event_id = models.AutoField(primary_key=True)
     event_name = models.CharField(max_length=20)
-    description = models.CharField(max_length=400)
+    description = models.TextField()
     date = models.DateField(blank=True, null=True)
     time = models.TimeField(blank=True, null=True)
     venue = models.CharField(max_length=30)
