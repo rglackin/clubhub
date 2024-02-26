@@ -24,6 +24,9 @@ dash_url = "crm:dashboard"
 back_btn = 'back_btn'
 show_sidebar = 'show_sidebar'
 
+def get_session_user(request):
+    user_id = request.session['user_id']
+    return User.objects.get(id=user_id)
 #HOME Page
 class HomePageView(generic.TemplateView):
     template_name = "crm/home.html"
@@ -273,7 +276,7 @@ class ClubCoordinatorCreateView(generic.FormView):
         return context
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        # Modify the queryset for the many-to-many field here
+        
         users = User.objects.filter(is_admin = False)
         #ids = users.values_list('id', flat=True)
         kwargs['user_queryset'] = users
@@ -288,6 +291,7 @@ class ClubCoordinatorCreateView(generic.FormView):
         object.save()
         self.success_url = reverse('crm:club_detail', kwargs={'pk':club_id})
         return super().form_valid(form)
+    
 #EVENT views 
 #TODO event create(createView)
 class EventCreateView(generic.CreateView):
@@ -325,8 +329,20 @@ class EventListView(generic.ListView):
 class EventDetailView(generic.DetailView):
     model = Events
     def get_context_data(self, **kwargs):
+        user = get_session_user(self.request)
+        event = self.get_object()
+        
         context = super().get_context_data(**kwargs)
         context[show_sidebar] = True
+        try:
+            registered= EventUser.objects.get(user=user,event=event)
+            approved= False
+            if registered.is_approved:
+                approved = True
+            context['registered'] = registered
+            context['approved'] = approved
+        except ObjectDoesNotExist:
+            pass
         return context
     """def is_member(self,user):
         #club = self.get_object()
@@ -335,11 +351,13 @@ class EventDetailView(generic.DetailView):
         except ObjectDoesNotExist:
             return False"""
 #TODO event join 
-#def event_join(request, pk):
+def event_join(request, pk):
+    user = get_session_user(request)
+    event = Events.objects.get(event_id=pk)
 
-
-
-#TODO event approval (trigger for event approval)
+    object = EventUser.create(user,event)
+    object.save()
+    return redirect('crm:dashboard')
 
 #REPORTS
 #only accessible by admin

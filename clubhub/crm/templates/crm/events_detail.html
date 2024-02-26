@@ -5,7 +5,7 @@
 <html>
 
 <body>
-  
+
   {%block main%}
   <div class="container main">
     <h1>{{object.event_name}}</h1>
@@ -15,9 +15,17 @@
             <p class="">Venue: {{object.venue}}</p> 
             <p class="">Description: {{object.description}}</p> 
             <p class="">Club running this event: {{object.club.name}}</p> 
+            {% if registered %}
             
-            <a class="btn btn-primary" href = "">Sign Up</a>
-            
+            <p class="font-weight-bold text-danger">{%if approved%}
+                You are registered for this event
+                {%else%}
+                Your registration for this event is pending approval
+                {%endif%}
+            </p>
+            {%else%}
+            <a class="btn btn-primary" href = "{% url 'crm:event_join' object.event_id%}">Sign Up</a>
+            {% endif%}
         </div>
     </div>
     
