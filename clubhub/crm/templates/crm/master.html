@@ -35,9 +35,9 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link py-3 border-bottom {% block nav_item_home %}{% endblock nav_item_home %}"
-          href="">
-          <img src="{% static 'crm/svg/house-door.svg'%}" width="24" height="24">
+        <a class="nav-link py-3 border-bottom {% block nav_item_group %}{% endblock nav_item_group %}"
+          href="{% url 'crm:club_list' %}">
+          <img src="{% static 'crm/svg/group.svg'%}" width="24" height="24">
         </a>
       </li>
       <li class="nav-item">

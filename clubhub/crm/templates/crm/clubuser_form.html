@@ -1,0 +1,26 @@
+{%extends 'crm/master.html'%}
+{% load static %}
+{% load render_table from django_tables2 %}
+<!DOCTYPE html>
+<html>
+
+<body>
+  
+  {%block main%}
+  <div class="container main">
+    <h1>Assign Co-ordinator</h1>
+    <div class="card shadow">
+        <div class="card-body">
+            <form method="post" action="">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn btn-primary" type="submit" value="view" name="view">Save</button>
+            </form>
+        </div>
+    </div>
+    
+    
+  </div>
+  {%endblock%}
+</body>
+</html>

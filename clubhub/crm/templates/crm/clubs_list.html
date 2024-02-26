@@ -1,6 +1,6 @@
 {% extends 'crm/master.html' %}
 {% load static %}
-
+{% block nav_item_group %}active{% endblock nav_item_group %}
 {% block main %}
   <style>
     .custom-btn {
@@ -18,16 +18,15 @@
 
   <div class="container main">
     <div class="h-100 d-flex flex-row align-items-center justify-content-center">
-      <h1 class="p-5" style="font-style: italic; font-size: 5rem">ClubHub</h1>
+      <h1 class="p-5" style="font-style: italic; font-size: 5rem">Club List</h1>
     </div>
 
     <!-- List of Clubs as Buttons -->
     <div class="d-flex flex-column mb-3 align-items-center justify-content-center">
-      {% for club in clubs %}
-        <form action="{% url 'crm:club_detail' club.club_id %}" method="post" style="display: inline;">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-primary custom-club-btn" name="club_id" value="{{ club.id }}">{{ club.name }}</button>
-        </form>
+      {% for club in object_list %}
+        <a href="{% url 'crm:club_detail' club.club_id %}" class="btn custom-club-btn p-2 m-1" >
+          {{club.name}}
+        </a>
       {% endfor %}
     </div>
   </div>

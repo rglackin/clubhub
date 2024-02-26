@@ -22,6 +22,7 @@ class CheckLoggedIn:
             if not user_id or not approved :
                 return HttpResponseRedirect(reverse('crm:index'))
         return response
+
 class CheckAdmin:
     def __init__(self, get_response):
         self.get_response = get_response

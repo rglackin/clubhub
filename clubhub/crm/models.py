@@ -35,33 +35,24 @@ class User(models.Model):
 
     def get_absolute_url(self):
         return(reverse('crm:index'))
+    def __str__(self):
+        return self.username
 
 class Club(models.Model):
     club_id = models.AutoField(primary_key=True)
-"""
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    validity_status = models.BooleanField(default=False)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.name
-
-======="""
     name = models.CharField('Club Name',max_length=20, unique = True)
     description = models.TextField()
-    club_created = models.DateTimeField(db_column='created')  
-    club_updated = models.DateTimeField(db_column='updated') 
+    club_created = models.DateTimeField(db_column='created',auto_now_add=True)  
+    club_updated = models.DateTimeField(db_column='updated',auto_now_add=True) 
 
     def get_absolute_url(self):
         return(reverse('crm:club_detail',kwargs={'pk':self.club_id}))
     class Meta:
         managed = False
         db_table = 'club'
+    
 
-   """ def get_absolute_url(self):
-        return reverse('crm:club_detail', args=[str(self.id)])"""
 
 class Events(models.Model):
     event_id = models.AutoField(primary_key=True)
@@ -70,8 +61,8 @@ class Events(models.Model):
     date = models.DateField(blank=True, null=True)
     time = models.TimeField(blank=True, null=True)
     venue = models.CharField(max_length=30)
-    event_created = models.DateTimeField()  
-    event_updated = models.DateTimeField()  
+    event_created = models.DateTimeField(auto_now_add=True)  
+    event_updated = models.DateTimeField(auto_now_add=True)  
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     
     class Meta:
@@ -85,19 +76,23 @@ class ClubUser(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE, default=0)
     user = models.ForeignKey(User, on_delete=models.CASCADE,default=0) 
     is_coord = models.BooleanField(default = False)
-    created = models.DateTimeField()  
-    updated = models.DateTimeField() 
+    created = models.DateTimeField(auto_now_add=True)  
+    updated = models.DateTimeField(auto_now_add=True) 
     is_approved = models.BooleanField(db_column='is_approved',null = False, default = False)
     class Meta:
         managed = False
         db_table = 'club_user'
-
+    @classmethod
+    def create(cls, club_id,user_id):
+        club = Club.objects.get(club_id = club_id)
+        user = User.objects.get(id =user_id )
+        clubuser = cls(club=club, user=user)
 class EventUser(models.Model):
     user = models.ForeignKey(User, on_delete = models.CASCADE,  null=False)
     event = models.ForeignKey(Events, on_delete = models.CASCADE, null=False)
     is_approved = models.BooleanField( null=False)
-    created = models.DateTimeField()  
-    updated = models.DateTimeField() 
+    created = models.DateTimeField(auto_now_add=True)  
+    updated = models.DateTimeField(auto_now_add=True) 
 
     class Meta:
         managed = False

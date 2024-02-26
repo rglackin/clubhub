@@ -47,12 +47,16 @@ class LoginForm(forms.Form):
         user = self.authenticate(username, password)
         return user
 
-
-
 class ClubForm(forms.ModelForm):
     class Meta:
         model= Club
-        fields = ('name','description')
-        
+        fields = ('name','description')        
     
-
+class ClubCoordForm(forms.ModelForm):
+    class Meta:
+        model = ClubUser
+        fields = ('user',)
+    def __init__(self, *args, user_queryset=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if user_queryset is not None:
+            self.fields['user'].queryset = user_queryset

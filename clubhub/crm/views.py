@@ -1,3 +1,4 @@
+from django.db.models.query import QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.views import generic
@@ -11,7 +12,7 @@ from django.views import View
 from django.views.generic import DetailView
 from .models import Club
 #from django.contrib.auth.decorators import login_required
-=======
+
 import datetime
 
 
@@ -83,18 +84,6 @@ class LoginView(generic.FormView):
 """class LogoutView():
     template_name = 'crm/logout.html'
 """
-
-
-
-class ClubListView(View):
-    template_name = 'crm/clubs_list.html'
-
-    def get(self, request, *args, **kwargs):
-        clubs = Club.objects.all()
-        return render(request, self.template_name, {'clubs': clubs})
-    
-
-
 """
 class ClubDetailView(DetailView):
     model = Club
@@ -171,7 +160,7 @@ class ApproveUserView(generic.RedirectView):
             print('false')
             return redirect('crm:dashboard')
         return super().get(request)
-    def get_success_url(self):
+    def get_redirect_url(self):
         return reverse('crm:dashboard')
 #TODO approve club user 
 
@@ -193,11 +182,21 @@ class ClubCreateView(generic.CreateView):
         #club = form.save()
         form.clean()
         return super().form_valid(form)
-    def get_success_url(self) :
-        
+    def get_redirect_url(self):
         return reverse('crm:dashboard')    
 
 #TODO club list (listView)
+class ClubListView(generic.ListView):
+    template_name = 'crm/clubs_list.html'
+    model = Club 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context[show_sidebar] = True
+        return context
+    """def get(self, request, *args, **kwargs):
+        clubs = Club.objects.all()
+        return render(request, self.template_name, {'clubs': clubs})"""
+    
 
 #TODO add club validity
 #TODO list events
@@ -216,7 +215,45 @@ class ClubDetailView(generic.DetailView):
         context['u'] = u
         return context
 
+class ClubJoinView(generic.RedirectView):
+    model = ClubUser
+    #fields = None
+    def get(self, request, pk):
+        #self.user = User.objects.get(id=pk)
+        club_id =  self.kwargs['pk'] 
+        user_id = self.request.session['user_id']
+        #user = User.objects.get(id=user_id)
+        ClubUser.create(club_id,user_id)
+        return super().get(request)
+    def get_success_url(self):
+        return reverse('crm:dashboard')
 
+class ClubCoordinatorCreateView(generic.FormView):
+    model = ClubUser
+    template_name = 'crm/clubuser_form.html'
+    form_class = ClubCoordForm
+    def get_context_data(self, **kwargs) :
+        context = super().get_context_data(**kwargs)
+        context[show_sidebar] = True
+        #context[back_btn] = dash_url
+        return context
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        # Modify the queryset for the many-to-many field here
+        users = User.objects.filter(is_admin = False)
+        #ids = users.values_list('id', flat=True)
+        kwargs['user_queryset'] = users
+
+        return kwargs
+    def form_valid(self, form: Any):
+        object = form.save(commit = False)
+        object.is_coord = True
+        club_id = self.kwargs['pk']
+        object.club = Club.objects.get(club_id= club_id)
+        object.is_approved = True
+        object.save()
+        self.success_url = reverse('crm:club_detail', kwargs={'pk':club_id})
+        return super().form_valid(form)
 #EVENT views 
 #TODO event create(createView)
 #TODO event list (listView)
