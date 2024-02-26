@@ -242,7 +242,8 @@ def joinClub(request, pk):
     membership = ClubUser.create(club_id,user_id)
     membership.save()
     return redirect('crm:dashboard')
-
+#BUG redirect view not working idk y
+#TODO user can join max of 3 clubs
 class ClubJoinView(generic.RedirectView):
     model = ClubUser
     #fields = None
@@ -322,10 +323,22 @@ class EventListView(generic.ListView):
         return querySet
 #Event detail
 class EventDetailView(generic.DetailView):
+    model = Events
     def get_context_data(self, **kwargs):
-        
-        return super().get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
+        context[show_sidebar] = True
+        return context
+    """def is_member(self,user):
+        #club = self.get_object()
+        try:
+            return ClubUser.objects.get(user = user,club = club )
+        except ObjectDoesNotExist:
+            return False"""
 #TODO event join 
+#def event_join(request, pk):
+
+
+
 #TODO event approval (trigger for event approval)
 
 #REPORTS

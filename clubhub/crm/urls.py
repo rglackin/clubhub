@@ -30,7 +30,7 @@ urlpatterns = [
     
     path('club/event/create/<int:pk>', views.EventCreateView.as_view(),name='create_event'),
     path('club/event/list/<int:pk>', views.EventListView.as_view(), name='event_list'),
-    #path('club/')
+    path('club/event/detail/<int:pk>',views.EventDetailView.as_view(), name='event_detail')
 
 ]
 

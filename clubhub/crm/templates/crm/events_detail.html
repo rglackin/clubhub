@@ -1,0 +1,28 @@
+{%extends 'crm/master.html'%}
+{% load static %}
+{% load render_table from django_tables2 %}
+<!DOCTYPE html>
+<html>
+
+<body>
+  
+  {%block main%}
+  <div class="container main">
+    <h1>{{object.event_name}}</h1>
+    <div class="card shadow">
+        <div class="card-body">
+            <p class="font-weight-bold">Event Date and time: {{object.date}} {{object.time}}</p>   
+            <p class="">Venue: {{object.venue}}</p> 
+            <p class="">Description: {{object.description}}</p> 
+            <p class="">Club running this event: {{object.club.name}}</p> 
+            
+            <a class="btn btn-primary" href = "">Sign Up</a>
+            
+        </div>
+    </div>
+    
+    
+  </div>
+  {%endblock%}
+</body>
+</html>
