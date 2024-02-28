@@ -28,7 +28,7 @@
         <a class="nav-link" data-toggle="tab" href="#user">My Memberships</a>
       </li>
     </ul>
-    <!-- Tab panes -->
+    
     <div class="card shadow">
 
       <div class="tab-content">
@@ -61,6 +61,8 @@
             {% else%}
             <p>Sorry, there are no current members of this club</p>
             {%endif%}
+            <a href="{% url 'crm:create_event' coord.club.club_id%}" class="btn btn-primary">Create Event</a>
+            
           </div>
         </div>
         {%endif%}
@@ -75,8 +77,10 @@
           </div>
         </div>
         {%endif%}
+
       </div>
     </div>
+    <a class="btn btn-secondary" href="{% url 'crm:user_profile' user.id%}">View my Profile</a>
   </div>
   {%endblock%}
 </body>

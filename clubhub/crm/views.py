@@ -1,4 +1,6 @@
+from typing import Dict
 from django.db.models.query import QuerySet
+from django.forms import BaseModelForm
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.views import generic
@@ -12,8 +14,9 @@ from django.views import View
 from django.views.generic import DetailView
 from .models import Club
 #from django.contrib.auth.decorators import login_required
-
+from django.utils import timezone
 import datetime
+from django.db.models import Q
 
 
 from .models import *
@@ -23,6 +26,9 @@ dash_url = "crm:dashboard"
 back_btn = 'back_btn'
 show_sidebar = 'show_sidebar'
 
+def get_session_user(request):
+    user_id = request.session['user_id']
+    return User.objects.get(id=user_id)
 #HOME Page
 class HomePageView(generic.TemplateView):
     template_name = "crm/home.html"
@@ -37,7 +43,6 @@ class RegisterFormView(generic.FormView):
     template_name = "crm/register.html"
     form_class= RegisterForm
     
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context[show_sidebar] = False
@@ -99,16 +104,7 @@ class ClubDetailView(DetailView):
               #  return redirect(reverse('crm:club_detail', kwargs={'pk': club_id}))
            # elif club_id == '2':
                # return redirect('url')
-
-
-
 """
-
-
-
-
-
-
 def user_logout(request):
     request.session['user_id'] = None
     return redirect('crm:index')
@@ -128,12 +124,14 @@ class DashBoardView(SingleTableView):
         coord = self.check_coord(user)
         context['coord'] = coord
         
+        
         if user.is_admin:
             user_list = User.objects.filter(is_admin = False)
             context['user_list'] = user_list
             context['club_table'] = ClubTable(Club.objects.all())
         if coord:
             club_users = ClubUser.objects.filter(club = coord.club)
+            #context['coord_club'] = coord.club.club_id
             context['club_users'] =  club_users
             context['club_users_table'] = ClubUserTable(club_users)
         if not user.is_admin:
@@ -170,9 +168,26 @@ class ApproveUserView(generic.RedirectView):
 
 #USER views
 #TODO user profile (detailView)
- 
+class UserDetailView(generic.DetailView):
+    model = User
+    template_name = "crm/user_profile.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context[show_sidebar] = True
+        context['user'] = User.objects.get(id= self.kwargs['pk'])
+        return context
 #TODO user update profile (updateView)
-
+class UserUpdateView(generic.UpdateView):
+    model = User
+    fields = ["phone_no","email"]
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context[show_sidebar] = True
+        context['user'] = User.objects.get(id= self.kwargs['pk'])
+        return context
+    def get_success_url(self) -> str:
+        return reverse('crm:dashboard'  )
 #CLUB views
 class ClubCreateView(generic.CreateView):
     model = Club
@@ -219,8 +234,8 @@ class ApproveClubUserView(generic.RedirectView):
         return super().get(request)
     def get_redirect_url(self):
         return reverse('crm:dashboard')
-#TODO add club validity
-#TODO list events
+
+
 
 class ClubDetailView(generic.DetailView):
     model = Club
@@ -250,7 +265,8 @@ def joinClub(request, pk):
     membership = ClubUser.create(club_id,user_id)
     membership.save()
     return redirect('crm:dashboard')
-
+#BUG redirect view not working idk y
+#TODO user can join max of 3 clubs
 class ClubJoinView(generic.RedirectView):
     model = ClubUser
     #fields = None
@@ -280,7 +296,7 @@ class ClubCoordinatorCreateView(generic.FormView):
         return context
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        # Modify the queryset for the many-to-many field here
+        
         users = User.objects.filter(is_admin = False)
         #ids = users.values_list('id', flat=True)
         kwargs['user_queryset'] = users
@@ -295,12 +311,103 @@ class ClubCoordinatorCreateView(generic.FormView):
         object.save()
         self.success_url = reverse('crm:club_detail', kwargs={'pk':club_id})
         return super().form_valid(form)
-#EVENT views 
-#TODO event create(createView)
-#TODO event list (listView)
-#TODO event join 
-#TODO event approval (trigger for event approval)
     
+#EVENT views 
+
+class EventCreateView(generic.CreateView):
+    model = Events
+    form_class = EventForm
+    def get_context_data(self, **kwargs) :
+        context =super().get_context_data(**kwargs)
+        context[show_sidebar] = True
+        return context
+    def form_valid(self, form):
+        object = form.save(commit=False)
+        club_id = self.kwargs['pk']
+        object.club = Club.objects.get(club_id=club_id)
+        object.save()
+        return super().form_valid(form)
+    def get_success_url(self):
+        return reverse('crm:dashboard')
+
+class EventListView(generic.ListView):
+    model = Events
+    club = None
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context[show_sidebar] = True
+        context['club'] = self.club
+        return context
+    def get_queryset(self):
+        club_id = self.kwargs['pk']
+        self.club = Club.objects.get(club_id =club_id)
+        now = timezone.now()
+        querySet =  Events.objects.filter(date__gte = now, club =self.club )
+        
+        return querySet
+#Event detail
+class EventDetailView(generic.DetailView):
+    model = Events
+    def get_context_data(self, **kwargs):
+        user = get_session_user(self.request)
+        event = self.get_object()
+        
+        context = super().get_context_data(**kwargs)
+        context[show_sidebar] = True
+        club_user = ClubUser.objects.get(user = user, club = event.club)
+        if club_user.is_coord:
+            context['coord'] = True
+        try:
+            registered= EventUser.objects.get(user=user,event=event)
+            approved= False
+            if registered.is_approved:
+                approved = True
+            context['registered'] = registered
+            context['approved'] = approved
+        except ObjectDoesNotExist:
+            pass
+        return context
+    """def is_member(self,user):
+        #club = self.get_object()
+        try:
+            return ClubUser.objects.get(user = user,club = club )
+        except ObjectDoesNotExist:
+            return False"""
+
+def event_join(request, pk):
+    user = get_session_user(request)
+    event = Events.objects.get(event_id=pk)
+
+    object = EventUser.create(user,event)
+    object.save()
+    return redirect('crm:dashboard')
+
+
+class EventManageView(SingleTableView):
+    model = EventUser
+    context_object_name = "user_list"
+    template_name = 'crm/events_manage.html'
+    table_class = EventManageTable
+    def get_context_data(self, **kwargs):
+        context =super().get_context_data(**kwargs)
+        context['event'] = Events.objects.get(event_id = self.kwargs['pk'])
+        context[show_sidebar] = True
+        return context
+    def get_queryset(self):
+        event_id = self.kwargs['pk']
+        object_list = EventUser.objects.filter(
+            event_id=event_id)
+        return object_list
+
+def event_approve(request, pk,approved):
+    event_user = EventUser.objects.get(id=pk)
+    event_id = event_user.event.event_id
+    if approved.lower() == 'true':
+        event_user.is_approved = True
+        event_user.save()
+    else:
+        event_user.delete()
+    return redirect('crm:event_manage', event_id)
 #REPORTS
 #only accessible by admin
 # displays view results

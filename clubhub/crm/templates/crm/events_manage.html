@@ -1,0 +1,32 @@
+{%extends 'crm/master.html'%}
+{% load static %}
+{% load render_table from django_tables2 %}
+<!DOCTYPE html>
+<html>
+
+<body>
+    {% block nav_item_dashboard %}active{% endblock nav_item_dashboard %}
+    {%block main%}
+    <div class="container main">
+        <h1>Manage {{event.event_name}}</h1>
+        <div class="card shadow">
+            <p class="m-1 font-weight-bold">Date: {{event.date}}</p>
+            <p class="m-1 font-weight-bold ">Time: {{event.time}}</p>
+            {%if user_list %}
+            <div class="card-body">
+                {% if table%}
+                {% render_table table %}
+                
+                {% endif %}
+                {%else%}
+                <p>There is noone currently registered for this event</p>
+            </div>
+
+            {%endif%}
+        </div>
+    </div>
+    </div>
+    {%endblock%}
+</body>
+
+</html>

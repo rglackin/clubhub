@@ -51,13 +51,14 @@ class Club(models.Model):
     class Meta:
         managed = False
         db_table = 'club'
-    
+    def __str__(self) -> str:
+        return self.name
 
 
 class Events(models.Model):
     event_id = models.AutoField(primary_key=True)
     event_name = models.CharField(max_length=20)
-    description = models.CharField(max_length=400)
+    description = models.TextField()
     date = models.DateField(blank=True, null=True)
     time = models.TimeField(blank=True, null=True)
     venue = models.CharField(max_length=30)
@@ -87,24 +88,20 @@ class ClubUser(models.Model):
         club = Club.objects.get(club_id = club_id)
         user = User.objects.get(id =user_id )
         return cls(club=club, user=user)
+    
+    def __str__(self) -> str:
+        return f"User:{self.user}\nClub:{self.club}"
 class EventUser(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete = models.CASCADE,  null=False)
     event = models.ForeignKey(Events, on_delete = models.CASCADE, null=False)
-    is_approved = models.BooleanField( null=False)
+    is_approved = models.BooleanField( null=False, default=False)
     created = models.DateTimeField(auto_now_add=True)  
     updated = models.DateTimeField(auto_now_add=True) 
 
     class Meta:
         managed = False
         db_table = 'event_user'
-
-
-
-
-
-
-
-
-
-
-
+    @classmethod
+    def create(cls, user,event):
+        return cls(user=user,event=event)

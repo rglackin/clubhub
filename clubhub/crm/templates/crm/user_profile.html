@@ -1,0 +1,27 @@
+{%extends 'crm/master.html'%}
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<body>
+    
+    {%block main%}
+    <div class="container main">
+        <h1>Profile </h1>
+        <div class="card shadow">
+            <div class="card-body">
+            <h2 class="m-1 font-weight-bold">Username: {{user.username}}</h2>
+            <p class="m-1  ">Email: {{user.email}}</p>
+            <p class="m-1  ">Phone No: {{user.phone_no}}</p>
+            <a class="btn btn-primary" href="{% url 'crm:user_update' user.id%}">Update contact details</a>
+            </div>
+
+            
+        </div>
+    </div>
+    </div>
+    {%endblock%}
+</body>
+
+</html>

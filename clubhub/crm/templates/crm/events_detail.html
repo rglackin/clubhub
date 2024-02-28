@@ -1,0 +1,39 @@
+{%extends 'crm/master.html'%}
+{% load static %}
+{% load render_table from django_tables2 %}
+<!DOCTYPE html>
+<html>
+
+<body>
+
+  {%block main%}
+  <div class="container main">
+    <h1>{{object.event_name}}</h1>
+    <div class="card shadow">
+        <div class="card-body">
+            <p class="font-weight-bold">Event Date and time: {{object.date}} {{object.time}}</p>   
+            <p class="">Venue: {{object.venue}}</p> 
+            <p class="">Description: {{object.description}}</p> 
+            <p class="">Club running this event: {{object.club.name}}</p> 
+            {% if registered %}
+            
+            <p class="font-weight-bold text-danger">{%if approved%}
+                You are registered for this event
+                {%else%}
+                Your registration for this event is pending approval
+                {%endif%}
+            </p>
+            {%else%}
+            <a class="btn btn-primary" href = "{% url 'crm:event_join' object.event_id%}">Sign Up</a>
+            {% endif%}
+            {% if coord %}
+            <a class="btn btn-primary" href = "{% url 'crm:event_manage' object.event_id%}">Manage Event</a>
+            {%endif%}
+        </div>
+    </div>
+    
+    
+  </div>
+  {%endblock%}
+</body>
+</html>

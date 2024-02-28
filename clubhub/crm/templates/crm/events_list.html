@@ -1,0 +1,33 @@
+{%extends 'crm/master.html'%}
+{% load static %}
+{% load render_table from django_tables2 %}
+<!DOCTYPE html>
+<html>
+
+<body>
+  
+  {%block main%}
+  <div class="container main">
+    <h1>{{club.name}} Events</h1>
+    {% for object in object_list %}
+    <div class="col-md-4">
+      <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">{{ object.event_name }}</h5>
+          <p class="card-text">{{ object.description }}</p>
+          <p class="card-text">{{object.date}}</p>
+          
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group">
+              <a href="{% url 'crm:event_detail' object.event_id%}" class="btn btn-sm btn-outline-secondary">View</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+    </div>
+  {%endblock%}
+</body>
+</html>

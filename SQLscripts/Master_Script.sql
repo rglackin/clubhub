@@ -1,5 +1,5 @@
 CREATE TABLE club(
-club_id INT Primary key,
+club_id INTEGER PRIMARY KEY,
 name VARCHAR(20) UNIQUE,
 description VARChaR(100),
 
@@ -42,9 +42,10 @@ FOREIGN KEY (club_id) REFERENCES club(club_id),
 FOREIGN KEY (user_ID) REFERENCES user(ID)
 );
 CREATE TABLE event_user(
+id INTEGER PRIMARY KEY,
 user_id INTEGER,
 event_id INTEGER,
-is_approved BOOLEAN,
+is_approved BOOLEAN DEFAULT False,
 created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
@@ -57,4 +58,21 @@ BEGIN
 	UPDATE user
     SET is_admin = TRUE, approved = TRUE
     WHERE ID = NEW.ID AND (SELECT COUNT(*) FROM user) = 1;
+END;
+CREATE TRIGGER event_approval
+AFTER INSERT ON event_user
+FOR EACH ROW
+BEGIN
+	UPDATE event_user
+    SET is_approved = 1
+    WHERE event_id = NEW.event_id
+    AND user_id IN (
+        SELECT user_ID
+        FROM club_user
+        WHERE club_id = (
+            SELECT club_id
+            FROM events
+            WHERE event_id = NEW.event_id 
+        ) AND is_approved = TRUE
+    );
 END;
