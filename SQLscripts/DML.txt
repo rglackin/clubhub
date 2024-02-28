@@ -1,0 +1,24 @@
+CREATE TRIGGER set_as_admin
+AFTER INSERT ON USER 
+BEGIN
+	UPDATE user
+    SET is_admin = TRUE, approved = TRUE
+    WHERE ID = NEW.ID AND (SELECT COUNT(*) FROM user) = 1;
+END;
+CREATE TRIGGER event_approval
+AFTER INSERT ON event_user
+FOR EACH ROW
+BEGIN
+	UPDATE event_user
+    SET is_approved = 1
+    WHERE event_id = NEW.event_id
+    AND user_id IN (
+        SELECT user_ID
+        FROM club_user
+        WHERE club_id = (
+            SELECT club_id
+            FROM events
+            WHERE event_id = NEW.event_id 
+        ) AND is_approved = TRUE
+    );
+END;

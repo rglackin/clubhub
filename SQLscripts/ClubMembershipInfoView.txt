@@ -1,0 +1,14 @@
+CREATE VIEW club_membership_info AS
+SELECT cu.id AS membership_id,
+       c.club_id,
+       c.name AS club_name,
+       c.description AS club_description,
+       u.ID AS user_id,
+       u.username,
+       u.phone_no,
+       u.email,
+       cu.is_coord,
+       cu.is_approved AS membership_approved
+FROM club_user cu
+JOIN club c ON cu.club_id = c.club_id
+JOIN user u ON cu.user_ID = u.ID;
