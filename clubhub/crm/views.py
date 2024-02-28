@@ -354,9 +354,13 @@ class EventDetailView(generic.DetailView):
         
         context = super().get_context_data(**kwargs)
         context[show_sidebar] = True
-        club_user = ClubUser.objects.get(user = user, club = event.club)
-        if club_user.is_coord:
-            context['coord'] = True
+        try:
+            club_user = ClubUser.objects.get(user = user, club = event.club)
+            if club_user.is_coord:
+                context['coord'] = True
+        except ObjectDoesNotExist:
+            pass
+        
         try:
             registered= EventUser.objects.get(user=user,event=event)
             approved= False
