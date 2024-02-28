@@ -23,7 +23,7 @@ class ClubUserTable(tables.Table):
     class Meta:
         model = ClubUser
         template_name = "django_tables2/bootstrap4.html"
-        fields = ("user__username","is_approved")
+        fields = ("user__username","is_approved","user__phone_no","user__email")
         #fields = ('__all__') 
         attrs = {
             "class":"table table-striped shadow table-hover sortable",
@@ -60,3 +60,19 @@ class MembershipTable(tables.Table):
             }
             }    
         #row_attrs = {'data-href': lambda record: record.get_absolute_url} 
+    
+class EventManageTable(tables.Table):
+    approve = tables.TemplateColumn(template_name="crm/approve_event.html", verbose_name="")
+    deny = tables.TemplateColumn(template_name="crm/deny_event.html", verbose_name="")
+    class Meta:
+        model = EventUser
+        template_name = "django_tables2/bootstrap4.html"
+        fields = ('user__username','is_approved') 
+        attrs = {
+            "class":"table table-striped shadow table-hover sortable",
+            "thead":{
+                "class":"thead-dark text-white"
+            }
+            }    
+        #row_attrs = {'data-href': lambda record: record.get_absolute_url} 
+        

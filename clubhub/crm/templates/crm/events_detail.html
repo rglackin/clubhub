@@ -26,6 +26,9 @@
             {%else%}
             <a class="btn btn-primary" href = "{% url 'crm:event_join' object.event_id%}">Sign Up</a>
             {% endif%}
+            {% if coord %}
+            <a class="btn btn-primary" href = "{% url 'crm:event_manage' object.event_id%}">Manage Event</a>
+            {%endif%}
         </div>
     </div>
     

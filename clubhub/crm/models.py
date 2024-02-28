@@ -92,6 +92,7 @@ class ClubUser(models.Model):
     def __str__(self) -> str:
         return f"User:{self.user}\nClub:{self.club}"
 class EventUser(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete = models.CASCADE,  null=False)
     event = models.ForeignKey(Events, on_delete = models.CASCADE, null=False)
     is_approved = models.BooleanField( null=False, default=False)
